@@ -256,9 +256,8 @@ I/O size (minimum/optimal): 524288 bytes / 2097152 bytes
 Disk label type: gpt
 Disk identifier: 67051BEE-6289-4199-9D64-0D63D0E7C7B7
 
-
-#         Start          End    Size  Type            Name
 ```
+#         Start          End    Size  Type            Name
 [vagrant@otuslinux ~]$ sudo parted /dev/md0 mkpart primary ext4 0% 20%
 Information: You may need to update /etc/fstab.
 
@@ -291,3 +290,8 @@ Disk identifier: 67051BEE-6289-4199-9D64-0D63D0E7C7B7
  5      1626112      2027519    196M  Microsoft basic primary
 ```
 # ВСЕ!
+
+# Пишем скрип raid.sh и добавляем в Vagrantfile 
+```
+config.vm.provision "shell", path: "raid.sh"
+```

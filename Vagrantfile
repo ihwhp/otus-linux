@@ -78,6 +78,7 @@ Vagrant.configure("2") do |config|
 	      mkdir -p ~root/.ssh
               cp ~vagrant/.ssh/auth* ~root/.ssh
 	      yum install -y mdadm smartmontools hdparm gdisk
+	  config.vm.provision "shell", path: "raid.sh"
   	  SHELL
 
       end
