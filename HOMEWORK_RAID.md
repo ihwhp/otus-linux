@@ -28,9 +28,8 @@
 /0/100/d/5          /dev/sdg   disk        262MB VBOX HARDDISK
 ```
 Вывод fdisk:
-
-[vagrant@otuslinux ~]$ sudo fdisk -l
 ```
+[vagrant@otuslinux ~]$ sudo fdisk -l
 Disk /dev/sda: 42.9 GB, 42949672960 bytes, 83886080 sectors
 Units = sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
@@ -76,7 +75,7 @@ Units = sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
 I/O size (minimum/optimal): 512 bytes / 512 bytes
 ```
-Зануляем суперблоки:
+###Зануляем суперблоки:
 ```
 [vagrant@otuslinux ~]$ sudo mdadm --zero-superblock --force /dev/sd{b,c,d,e,f,g}
 mdadm: Unrecognised md component device - /dev/sdb
@@ -86,7 +85,7 @@ mdadm: Unrecognised md component device - /dev/sde
 mdadm: Unrecognised md component device - /dev/sdf
 mdadm: Unrecognised md component device - /dev/sdg
 ```
-Создаем RAID6 из 6 дисков:
+###Создаем RAID6 из 6 дисков:
 ```
 [vagrant@otuslinux ~]$ sudo mdadm --create --verbose /dev/md0 -l 6 -n 6 /dev/sd{b,c,d,e,f,g}
 mdadm: layout defaults to left-symmetric
@@ -140,15 +139,67 @@ Consistency Policy : resync
        4       8       80        4      active sync   /dev/sdf
        5       8       96        5      active sync   /dev/sdg
 ```
-Создаем mdadm.conf:
+###Создаем mdadm.conf:
 ```
 [vagrant@otuslinux ~]$ sudo mdadm --detail --scan --verbose
 ARRAY /dev/md0 level=raid6 num-devices=6 metadata=1.2 name=otuslinux:0 UUID=d7714e6e:2b66270c:e3f5ac19:3767ba00
    devices=/dev/sdb,/dev/sdc,/dev/sdd,/dev/sde,/dev/sdf,/dev/sdg
 ```
+```
 man mdadm.conf
+sudo su
+```
 ```
 [root@otuslinux vagrant]# cat /etc/mdadm.conf
 DEVICE partitions
 ARRAY /dev/md0 level=raid6 num-devices=6 metadata=1.2 name=otuslinux:0 UUID=d7714e6e:2b66270c:e3f5ac19:3767ba00
+```
+###Сломать/починить RAID
+####Сломали:
+```
+[vagrant@otuslinux ~]$ sudo mdadm /dev/md0 --fail /dev/sdd
+mdadm: set /dev/sdd faulty in /dev/md0
+[vagrant@otuslinux ~]$ cat /proc/mdstat
+Personalities : [raid6] [raid5] [raid4]
+md0 : active raid6 sdg[5] sdf[4] sde[3] sdd[2](F) sdc[1] sdb[0]
+      1015808 blocks super 1.2 level 6, 512k chunk, algorithm 2 [6/5] [UU_UUU]
+
+unused devices: <none>
+[vagrant@otuslinux ~]$ sudo mdadm -D /dev/md0
+/dev/md0:
+           Version : 1.2
+     Creation Time : Fri May 13 13:56:56 2022
+        Raid Level : raid6
+        Array Size : 1015808 (992.00 MiB 1040.19 MB)
+     Used Dev Size : 253952 (248.00 MiB 260.05 MB)
+      Raid Devices : 6
+     Total Devices : 6
+       Persistence : Superblock is persistent
+
+       Update Time : Fri May 13 14:32:53 2022
+             State : clean, degraded
+    Active Devices : 5
+   Working Devices : 5
+    Failed Devices : 1
+     Spare Devices : 0
+
+            Layout : left-symmetric
+        Chunk Size : 512K
+
+Consistency Policy : resync
+
+              Name : otuslinux:0  (local to host otuslinux)
+              UUID : d7714e6e:2b66270c:e3f5ac19:3767ba00
+            Events : 19
+
+    Number   Major   Minor   RaidDevice State
+       0       8       16        0      active sync   /dev/sdb
+       1       8       32        1      active sync   /dev/sdc
+       -       0        0        2      removed
+       3       8       64        3      active sync   /dev/sde
+       4       8       80        4      active sync   /dev/sdf
+       5       8       96        5      active sync   /dev/sdg
+
+       2       8       48        -      faulty   /dev/sdd
+
 ```
