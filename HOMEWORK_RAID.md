@@ -75,7 +75,7 @@ Units = sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
 I/O size (minimum/optimal): 512 bytes / 512 bytes
 ```
-###Зануляем суперблоки:
+### Зануляем суперблоки:
 ```
 [vagrant@otuslinux ~]$ sudo mdadm --zero-superblock --force /dev/sd{b,c,d,e,f,g}
 mdadm: Unrecognised md component device - /dev/sdb
@@ -85,7 +85,7 @@ mdadm: Unrecognised md component device - /dev/sde
 mdadm: Unrecognised md component device - /dev/sdf
 mdadm: Unrecognised md component device - /dev/sdg
 ```
-###Создаем RAID6 из 6 дисков:
+### Создаем RAID6 из 6 дисков:
 ```
 [vagrant@otuslinux ~]$ sudo mdadm --create --verbose /dev/md0 -l 6 -n 6 /dev/sd{b,c,d,e,f,g}
 mdadm: layout defaults to left-symmetric
@@ -139,7 +139,7 @@ Consistency Policy : resync
        4       8       80        4      active sync   /dev/sdf
        5       8       96        5      active sync   /dev/sdg
 ```
-###Создаем mdadm.conf:
+### Создаем mdadm.conf:
 ```
 [vagrant@otuslinux ~]$ sudo mdadm --detail --scan --verbose
 ARRAY /dev/md0 level=raid6 num-devices=6 metadata=1.2 name=otuslinux:0 UUID=d7714e6e:2b66270c:e3f5ac19:3767ba00
@@ -154,8 +154,8 @@ sudo su
 DEVICE partitions
 ARRAY /dev/md0 level=raid6 num-devices=6 metadata=1.2 name=otuslinux:0 UUID=d7714e6e:2b66270c:e3f5ac19:3767ba00
 ```
-###Сломать/починить RAID
-####Сломали:
+### Сломать/починить RAID
+#### Сломали:
 ```
 [vagrant@otuslinux ~]$ sudo mdadm /dev/md0 --fail /dev/sdd
 mdadm: set /dev/sdd faulty in /dev/md0
@@ -203,7 +203,7 @@ Consistency Policy : resync
        2       8       48        -      faulty   /dev/sdd
 
 ```
-####Чиним:
+#### Чиним:
 ```
 [vagrant@otuslinux ~]$ sudo mdadm /dev/md0 --remove /dev/sdd
 mdadm: hot removed /dev/sdd from /dev/md0
@@ -248,7 +248,7 @@ Consistency Policy : resync
        4       8       80        4      active sync   /dev/sdf
        5       8       96        5      active sync   /dev/sdg
 ```
-#Создание GPT раздела
+# Создание GPT раздела
 Disk /dev/md0: 1040 MB, 1040187392 bytes, 2031616 sectors
 Units = sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
@@ -290,4 +290,4 @@ Disk identifier: 67051BEE-6289-4199-9D64-0D63D0E7C7B7
  4      1220608      1626111    198M  Microsoft basic primary
  5      1626112      2027519    196M  Microsoft basic primary
 ```
-###ВСЕ!
+# ВСЕ!
