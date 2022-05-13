@@ -28,8 +28,9 @@
 /0/100/d/5          /dev/sdg   disk        262MB VBOX HARDDISK
 ```
 Вывод fdisk:
-[vagrant@otuslinux ~]$ sudo fdisk -l
 
+[vagrant@otuslinux ~]$ sudo fdisk -l
+```
 Disk /dev/sda: 42.9 GB, 42949672960 bytes, 83886080 sectors
 Units = sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
@@ -74,4 +75,15 @@ Disk /dev/sdg: 262 MB, 262144000 bytes, 512000 sectors
 Units = sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
 I/O size (minimum/optimal): 512 bytes / 512 bytes
+```
+Зануляем суперблоки:
+```
+[vagrant@otuslinux ~]$ sudo mdadm --zero-superblock --force /dev/sd{b,c,d,e,f,g}
+mdadm: Unrecognised md component device - /dev/sdb
+mdadm: Unrecognised md component device - /dev/sdc
+mdadm: Unrecognised md component device - /dev/sdd
+mdadm: Unrecognised md component device - /dev/sde
+mdadm: Unrecognised md component device - /dev/sdf
+mdadm: Unrecognised md component device - /dev/sdg
+```
 
