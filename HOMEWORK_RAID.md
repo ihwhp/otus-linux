@@ -140,4 +140,15 @@ Consistency Policy : resync
        4       8       80        4      active sync   /dev/sdf
        5       8       96        5      active sync   /dev/sdg
 ```
-
+Создаем mdadm.conf:
+```
+[vagrant@otuslinux ~]$ sudo mdadm --detail --scan --verbose
+ARRAY /dev/md0 level=raid6 num-devices=6 metadata=1.2 name=otuslinux:0 UUID=d7714e6e:2b66270c:e3f5ac19:3767ba00
+   devices=/dev/sdb,/dev/sdc,/dev/sdd,/dev/sde,/dev/sdf,/dev/sdg
+```
+man mdadm.conf
+```
+[root@otuslinux vagrant]# cat /etc/mdadm.conf
+DEVICE partitions
+ARRAY /dev/md0 level=raid6 num-devices=6 metadata=1.2 name=otuslinux:0 UUID=d7714e6e:2b66270c:e3f5ac19:3767ba00
+```
