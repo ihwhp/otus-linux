@@ -78,7 +78,12 @@ Vagrant.configure("2") do |config|
 	      mkdir -p ~root/.ssh
               cp ~vagrant/.ssh/auth* ~root/.ssh
 	      yum install -y mdadm smartmontools hdparm gdisk
-	  config.vm.provision "shell", path: "raid.sh"
+              sudo mdadm --zero-superblock --force /dev/sd{b,c,d,e,f,g}
+              sudo mdadm --create --verbose /dev/md0 -l 6 -n 6 /dev/sd{b,c,d,e,f,g}
+              sudo mkdir /etc/mdadm
+              sudo echo "DEVICE partitions" > /etc/mdadm.conf
+              sudo mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
+
   	  SHELL
 
       end
